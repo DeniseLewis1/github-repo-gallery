@@ -2,6 +2,8 @@
 const overview = document.querySelector(".overview");
 // GitHub username
 const username = "DeniseLewis1";
+// List of repos
+const repoList = document.querySelector(".repo-list");
 
 // Fetch GitHub profile
 const getProfile = async function () {
@@ -13,7 +15,7 @@ const getProfile = async function () {
 getProfile();
 
 // Fetch and display user information
-const displayUserInfo = async function (data) {
+const displayUserInfo = function (data) {
     const div = document.createElement("div");
     div.classList.add("user-info");
     div.innerHTML = `
@@ -28,4 +30,24 @@ const displayUserInfo = async function (data) {
         </div>
         `;
     overview.append(div);
+    getRepos();
 };
+
+// Fetch repo information
+const getRepos = async function () {
+    const response = await fetch(`https://api.github.com/users/${username}/repos?sort=udpated&per_page=100`);
+    const data = await response.json();
+    displayRepoInfo(data);
+};
+
+// Display repo information
+const displayRepoInfo = function (repos) {
+    for (let repo of repos) {
+        let li = document.createElement("li");
+        li.classList.add("repo");
+        li.innerHTML = `<h3>${repo.name}</h3>`;
+        repoList.append(li);
+    }
+};
+
+//
